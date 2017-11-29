@@ -1,3 +1,5 @@
+var babelMoreOptions = { presets: 'es2015' };
+
 module.exports = function(config) {
   config.set({
     basePath: '',
@@ -10,10 +12,28 @@ module.exports = function(config) {
     exclude: [
     ],
     preprocessors: {
-      'src/*.js': ['babel'],
+      'src/*.js': ['babel', 'coverage'],
       'tests/*.js': ['babel']
     },
-    reporters: ['dots'],
+    coverageReporter: {
+      instrumenters: { isparta : require('isparta') },
+      instrumenter: {
+        '**/*.js': 'isparta'
+      },
+      instrumenterOptions: {
+        isparta: { babel : babelMoreOptions }
+      },
+      reporters: [
+        {
+          type: 'text-summary',
+        },
+        {
+          type: 'html',
+          dir: 'coverage/',
+        }
+      ]
+    },
+    reporters: ['dots', 'coverage'],
     port: 9876,
     colors: true,
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
